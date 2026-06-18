@@ -1,0 +1,2937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Craftly — Intelligence for Bangladesh</title>
+<meta name="description" content="Bangladesh's first agentic AI. Craftly acts, not just answers — connecting real people and solving real problems on devices owned by Bangladeshis.">
+<meta property="og:title" content="Craftly — Intelligence for Bangladesh">
+<meta property="og:description" content="An AI that connects real people, solves real problems, and runs on devices owned by Bangladeshis.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #0A0A0A;
+    --bg-tertiary: #141414;
+    --text-primary: #F5F5F5;
+    --text-muted: #8A8A8A;
+    --border-color: #262626;
+    --accent: #FFFFFF;
+    --accent-invert: #000000;
+    --green: #22c55e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLL PROGRESS BAR ─────────────────────────────────── */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0;
+    height: 2px; width: 0%;
+    background: var(--accent);
+    z-index: 200;
+    transition: width 0.1s linear;
+  }
+
+  /* ── NAV ──────────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 48px;
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+    color: var(--text-muted); text-decoration: none;
+    text-transform: uppercase; transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--accent); color: var(--accent-invert);
+    padding: 10px 22px; border-radius: 100px;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ── HERO ─────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding-top: 120px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-left: 24px; padding-right: 24px;
+    padding-bottom: 80px;
+    overflow: hidden;
+  }
+  .hero > * { position: relative; z-index: 1; }
+
+  /* ── PARTICLE CANVAS ──────────────────────────────────────── */
+  .particle-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6vw, 80px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    max-width: 780px;
+    margin-bottom: 24px;
+  }
+  .hero-headline em { font-style: italic; color: var(--text-muted); }
+  .hero-sub {
+    font-size: 17px; font-weight: 300; color: var(--text-muted);
+    max-width: 480px; margin-bottom: 52px; line-height: 1.7;
+  }
+
+  /* ── PHONE MOCKUP ─────────────────────────────────────────── */
+  .phone-wrap {
+    position: relative;
+    width: 320px;
+    margin: 0 auto;
+    perspective: 1200px;
+  }
+  .phone-shell {
+    background: #111111;
+    border-radius: 44px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.1),
+      0 40px 80px rgba(0,0,0,0.5),
+      0 80px 120px rgba(0,0,0,0.3);
+  }
+  .phone-screen {
+    background: var(--bg-primary);
+    border-radius: 34px;
+    overflow: hidden;
+    height: 620px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .phone-notch {
+    background: #111111;
+    width: 100px; height: 28px;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+    flex-shrink: 0;
+  }
+  .phone-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px 8px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+  }
+  .phone-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #222;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .phone-avatar svg { width: 18px; height: 18px; stroke: #FFF; }
+  .phone-header-info h4 {
+    font-size: 13px; font-weight: 600; color: var(--text-primary);
+  }
+  .phone-header-info span {
+    font-size: 10px; color: var(--green); font-weight: 500;
+  }
+  .chat-area {
+    flex: 1; overflow-y: auto; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 8px;
+    scroll-behavior: smooth;
+  }
+  .chat-area::-webkit-scrollbar { display: none; }
+
+  .msg {
+    display: flex; flex-direction: column;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    max-width: 82%;
+  }
+  .msg.visible { opacity: 1; transform: translateY(0); }
+  .msg.user { align-self: flex-end; }
+  .msg.bot  { align-self: flex-start; }
+
+  .bubble {
+    padding: 8px 12px;
+    border-radius: 16px;
+    font-size: 11.5px;
+    line-height: 1.55;
+  }
+  .msg.user .bubble {
+    background: #2A2A2A; color: var(--text-primary);
+    border-bottom-right-radius: 4px;
+  }
+  .msg.bot .bubble {
+    background: #111; color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 4px;
+  }
+  .bubble-card {
+    background: #111;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+  .bubble-card .card-title {
+    font-weight: 600; font-size: 11px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .bubble-card .card-item {
+    display: flex; align-items: flex-start; gap: 6px;
+    margin-bottom: 3px; color: #BBB;
+  }
+  .bubble-card .card-item::before {
+    content: '•'; color: var(--text-muted); flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .typing-indicator {
+    display: flex; gap: 4px; align-items: center;
+    padding: 10px 14px;
+  }
+  .typing-indicator span {
+    width: 6px; height: 6px; background: var(--text-muted);
+    border-radius: 50%; animation: bounce 1.2s infinite;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%,60%,100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+  .typing-wrap {
+    align-self: flex-start;
+    background: #111;
+    border: 1px solid var(--border-color);
+    border-radius: 16px 16px 16px 4px;
+    display: none;
+  }
+  .typing-wrap.active { display: block; }
+
+  /* ── HOW IT WORKS SECTION ─────────────────────────────────── */
+  .how-section {
+    padding: 120px 48px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    position: relative;
+    overflow: hidden;
+  }
+  .how-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .steps-track {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 72px;
+    position: relative;
+  }
+  /* Connector line behind steps */
+  .steps-track::before {
+    content: '';
+    position: absolute;
+    top: 44px;
+    left: 12%;
+    right: 12%;
+    height: 1px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--border-color) 0px,
+      var(--border-color) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+    z-index: 0;
+  }
+  .step {
+    text-align: center;
+    padding: 0 16px;
+    position: relative;
+    z-index: 1;
+    cursor: default;
+  }
+  .step-icon {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+  }
+  .step-icon::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    transition: border-color 0.4s ease;
+  }
+  .step.active .step-icon {
+    border-color: var(--accent);
+    background: var(--accent);
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(255,255,255,0.08);
+  }
+  .step.active .step-icon::after {
+    border-color: rgba(255,255,255,0.15);
+  }
+  .step.active .step-icon svg {
+    stroke: var(--accent-invert);
+  }
+  .step.active h4 {
+    color: #fff;
+  }
+  .step.active .step-number {
+    color: var(--text-primary);
+  }
+  .step-icon svg {
+    width: 32px; height: 32px;
+    stroke: var(--text-primary);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.3s;
+  }
+  .step-number {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .step h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .step p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .step-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.4s ease;
+    opacity: 0;
+  }
+  .step.active .step-detail {
+    max-height: 80px;
+    opacity: 1;
+  }
+  .step-detail p {
+    font-size: 11px;
+    color: #666;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  /* ── TERMINAL SECTION ─────────────────────────────────────── */
+  .terminal-section {
+    padding: 0 48px 120px;
+    background: var(--bg-secondary);
+  }
+  .terminal-inner {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .terminal-card {
+    background: #0C0C0C;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-color);
+    background: #0F0F0F;
+  }
+  .terminal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-dot:nth-child(1) { background: #555; }
+  .terminal-dot:nth-child(2) { background: #444; }
+  .terminal-dot:nth-child(3) { background: #333; }
+  .terminal-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+  .terminal-body {
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 2;
+    color: #999;
+    min-height: 300px;
+  }
+  .terminal-line {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .terminal-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .terminal-line .cmd { color: var(--text-primary); }
+  .terminal-line .success { color: var(--green); }
+  .terminal-line .highlight { color: #ccc; }
+  .terminal-cursor {
+    display: inline-block;
+    width: 8px; height: 16px;
+    background: var(--accent);
+    margin-left: 2px;
+    animation: blink-cursor 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+  @keyframes blink-cursor {
+    50% { opacity: 0; }
+  }
+
+  /* ── SECTION STYLES ───────────────────────────────────────── */
+  section { padding: 100px 48px; }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -1px;
+    max-width: 640px;
+    margin-bottom: 20px;
+  }
+  .section-title em { font-style: italic; color: var(--text-muted); }
+  .section-body {
+    font-size: 16px; color: var(--text-muted);
+    max-width: 520px; line-height: 1.75; font-weight: 300;
+  }
+
+  /* ── WORKSPACE SECTION ────────────────────────────────────── */
+  .workspace-section {
+    background: var(--bg-secondary);
+    padding: 100px 48px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  .workspace-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+  }
+  .screenshots-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .screenshot-card {
+    background: transparent;
+    padding: 0;
+    perspective: 1000px;
+  }
+  .screenshot-inner {
+    background: #000;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    height: 100%;
+  }
+  .screenshot-inner img {
+    width: 100%; display: block;
+    opacity: 0.85;
+  }
+  .screenshot-card.wide { grid-column: 1 / -1; }
+  .feature-pills {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 32px;
+  }
+  .pill {
+    background: #111;
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 12px; font-weight: 500; color: var(--text-primary);
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .pill:hover {
+    background: #1a1a1a;
+    border-color: #444;
+  }
+
+  /* ── DECENTRALIZED ────────────────────────────────────────── */
+  .decentral-section {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .node-visual {
+    position: relative;
+    height: 380px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .node-canvas-wrap {
+    position: relative;
+    width: 100%; height: 380px;
+    background: transparent;
+  }
+  #nodeCanvas {
+    display: block;
+    width: 100%; height: 100%;
+  }
+  .stat-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px; margin-top: 40px;
+  }
+  .stat-item {
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+    transition: border-color 0.3s;
+  }
+  .stat-item:hover { border-color: #555; }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700; letter-spacing: -1px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+
+  /* ── CHARTS & INFOGRAPHICS SECTION ────────────────────────── */
+  .charts-section {
+    padding: 120px 48px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+  }
+  .charts-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 72px;
+  }
+  .chart-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px;
+    transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+  }
+  .chart-card:hover {
+    border-color: #444;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+  }
+  .chart-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .chart-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .chart-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700;
+    margin-bottom: 32px; line-height: 1.3;
+  }
+
+  /* Donut Chart */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  .donut-svg {
+    width: 180px; height: 180px;
+    flex-shrink: 0;
+    transform: rotate(-90deg);
+  }
+  .donut-track {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 14;
+  }
+  .donut-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 14;
+    stroke-linecap: round;
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+    transition: stroke-dashoffset 2s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .donut-fill.animated {
+    stroke-dashoffset: 0;
+  }
+  .donut-center-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .donut-svg-wrap {
+    position: relative;
+  }
+  .donut-details .detail-item {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+    font-size: 14px; color: var(--text-muted);
+    font-weight: 300;
+  }
+  .detail-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .detail-dot.white { background: var(--accent); }
+  .detail-dot.grey { background: var(--border-color); }
+
+  /* Bar Chart */
+  .bar-chart { margin-top: 8px; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .bar-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    width: 120px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 8px;
+    width: 0%;
+    transition: width 1.6s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .bar-fill.animated {
+    /* width set by data-width attribute */
+  }
+  .bar-fill.dark { background: #555; }
+  .bar-fill.darker { background: #333; }
+  .bar-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    width: 60px;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Progress Bars (Language Coverage) */
+  .progress-group { margin-top: 8px; }
+  .progress-row {
+    margin-bottom: 28px;
+  }
+  .progress-row:last-child { margin-bottom: 0; }
+  .progress-header {
+    display: flex; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .progress-label {
+    font-size: 14px; font-weight: 500;
+    color: var(--text-primary);
+  }
+  .progress-pct {
+    font-size: 14px; font-weight: 600;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .progress-track {
+    height: 8px;
+    background: #1a1a1a;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    width: 0%;
+    transition: width 1.8s cubic-bezier(0.23, 1, 0.32, 1);
+    background: var(--accent);
+  }
+  .progress-fill.muted { background: #555; }
+  .progress-fill.dim { background: #333; }
+  .progress-fill.animated {
+    /* width set dynamically */
+  }
+  .progress-caption {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    border-left: 2px solid var(--border-color);
+    padding-left: 16px;
+  }
+
+  /* Stat Counter Card */
+  .stat-counter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .counter-item {
+    text-align: center;
+    padding: 32px 16px;
+    background: #0A0A0A;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .counter-item:hover {
+    border-color: #444;
+    transform: translateY(-2px);
+  }
+  .counter-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -1px;
+  }
+  .counter-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── MARQUEE TICKER ───────────────────────────────────────── */
+  .marquee-section {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    overflow: hidden;
+    padding: 20px 0;
+  }
+  .marquee-track {
+    display: flex;
+    animation: marquee-scroll 30s linear infinite;
+    width: max-content;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 40px;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .marquee-dot {
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── YOUNG PEOPLE SECTION ─────────────────────────────────── */
+  .youth-section {
+    background: var(--bg-primary);
+    padding: 100px 48px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  .youth-inner { max-width: 1100px; margin: 0 auto; }
+  .youth-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px; margin-top: 64px;
+  }
+  .pillar {
+    border-top: 1px solid var(--border-color);
+    padding-top: 28px;
+    transition: transform 0.4s ease, border-color 0.3s;
+    cursor: default;
+  }
+  .pillar:hover {
+    transform: translateY(-6px);
+    border-color: #555;
+  }
+  .pillar-num {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+    color: var(--text-muted); margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .pillar h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 600;
+    margin-bottom: 14px; line-height: 1.3;
+    transition: color 0.3s;
+  }
+  .pillar:hover h3 { color: #fff; }
+  .pillar p { font-size: 14px; color: var(--text-muted); line-height: 1.75; font-weight: 300; }
+  .pillar-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .pillar:hover .pillar-icon {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .pillar-icon svg {
+    width: 22px; height: 22px;
+    stroke: var(--text-primary);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.3s;
+  }
+  .pillar:hover .pillar-icon svg {
+    stroke: var(--accent-invert);
+  }
+
+  .manifesto-block {
+    margin-top: 80px;
+    padding: 56px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    border-radius: 24px;
+    max-width: 820px;
+    transition: border-color 0.4s;
+  }
+  .manifesto-block:hover { border-color: #444; }
+  .manifesto-block blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.5vw, 30px);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+  .manifesto-block cite {
+    font-size: 13px; color: var(--text-muted);
+    font-style: normal; letter-spacing: 0.05em;
+  }
+
+  /* ── CTA / JOIN SECTION ───────────────────────────────────── */
+  .join-section {
+    padding: 100px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .join-left .section-title { max-width: 460px; }
+  .join-left .section-body { margin-top: 20px; }
+  .form-wrap {
+    background: var(--bg-tertiary);
+    border-radius: 24px;
+    padding: 40px;
+    border: 1px solid var(--border-color);
+  }
+  .form-row { margin-bottom: 20px; }
+  .form-row label {
+    display: block;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    width: 100%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+  .form-row input:focus,
+  .form-row select:focus,
+  .form-row textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+  }
+  .form-row textarea { resize: vertical; min-height: 100px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .submit-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--accent-invert);
+    border: none; cursor: pointer;
+    padding: 16px 24px;
+    border-radius: 100px;
+    font-size: 15px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-top: 8px;
+  }
+  .submit-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .form-note {
+    text-align: center; margin-top: 16px;
+    font-size: 12px; color: var(--text-muted);
+  }
+
+  /* ── SUCCESS MESSAGE ──────────────────────────────────────── */
+  .success-msg {
+    display: none;
+    text-align: center; padding: 32px;
+  }
+  .success-msg.show { display: block; }
+  .success-icon {
+    width: 52px; height: 52px;
+    background: var(--accent); color: var(--accent-invert);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 22px;
+  }
+  .success-msg h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; margin-bottom: 8px;
+  }
+  .success-msg p { font-size: 14px; color: var(--text-muted); }
+
+  /* ── FOOTER ───────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border-color);
+    padding: 40px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--bg-primary);
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+  }
+  .footer-logo img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+  }
+  .footer-note {
+    font-size: 12px; color: var(--text-muted);
+  }
+
+  /* ── SCROLL ANIMATION ─────────────────────────────────────── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  /* Staggered reveal for children */
+  .stagger-reveal > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .stagger-reveal.in-view > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+  .stagger-reveal.in-view > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
+  .stagger-reveal.in-view > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+  .stagger-reveal.in-view > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.55s; }
+
+  /* ── MESH NETWORK ANIMATION SECTION ───────────────────────── */
+  .mesh-section {
+    padding: 120px 48px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  .mesh-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .mesh-canvas-wrap {
+    position: relative;
+    margin-top: 56px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  #meshCanvas {
+    display: block;
+    width: 100%;
+    height: 520px;
+  }
+  .mesh-legend {
+    position: absolute;
+    bottom: 20px; left: 24px;
+    display: flex; gap: 20px;
+  }
+  .mesh-legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--text-muted);
+    font-weight: 500; letter-spacing: 0.04em;
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .legend-phone { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+  .legend-device { background: #222; border: 1px solid #444; }
+  .legend-inference { background: #06b6d4; box-shadow: 0 0 6px rgba(6,182,212,0.5); }
+  .legend-gradient { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+  .mesh-status {
+    position: absolute;
+    top: 20px; right: 24px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--text-muted);
+    font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .mesh-status-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 72px 24px; }
+    .workspace-section { padding: 72px 24px; }
+    .workspace-inner { grid-template-columns: 1fr; gap: 48px; }
+    .screenshots-grid { grid-template-columns: 1fr; }
+    .screenshot-card.wide { grid-column: auto; }
+    .decentral-section { grid-template-columns: 1fr; gap: 48px; }
+    .youth-pillars { grid-template-columns: 1fr; gap: 32px; }
+    .manifesto-block { padding: 32px 24px; }
+    .join-section { grid-template-columns: 1fr; gap: 48px; padding: 72px 24px; }
+    footer { flex-direction: column; gap: 24px; text-align: center; padding: 32px 24px; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .how-section { padding: 72px 24px; }
+    .steps-track {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .steps-track::before { display: none; }
+    .terminal-section { padding: 0 24px 72px; }
+    .terminal-body { padding: 16px; font-size: 11px; min-height: 240px; }
+    .charts-section { padding: 72px 24px; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .donut-wrap { flex-direction: column; text-align: center; }
+    .stat-counter-grid { grid-template-columns: 1fr; gap: 16px; }
+    .counter-value { font-size: 36px; }
+    .bar-label { width: 80px; font-size: 11px; }
+    .mesh-section { padding: 72px 24px; }
+    #meshCanvas { height: 380px; }
+    .mesh-legend { flex-wrap: wrap; gap: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .steps-track {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .step-icon { width: 72px; height: 72px; }
+    .step-icon svg { width: 26px; height: 26px; }
+    .chart-card { padding: 28px; }
+    .donut-svg { width: 140px; height: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="logo.png" alt="Craftly Logo">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#workspace">Workspace</a></li>
+    <li><a href="#numbers">Numbers</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#join">Join</a></li>
+  </ul>
+  <a href="#join" class="nav-cta">Join the Team</a>
+</nav>
+
+<!-- SECTION 1: HERO + DEMO -->
+<section class="hero" id="demo">
+  <canvas class="particle-canvas" id="particleCanvas"></canvas>
+
+  <p class="hero-eyebrow reveal">Bangladesh's First Agentic AI</p>
+  <h1 class="hero-headline reveal">Meet Craftly Robot.<br><em>It acts, not just answers.</em></h1>
+  <p class="hero-sub reveal">An AI that connects real people, solves real problems, and runs on devices owned by Bangladeshis — for Bangladeshis.</p>
+
+  <!-- 3D Wrap Added to Phone -->
+  <div class="phone-wrap reveal tilt-wrap">
+    <div class="phone-shell tilt-target">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="phone-header">
+          <div class="phone-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <div class="phone-header-info">
+            <h4>Craftly Robot</h4>
+            <span>● Online</span>
+          </div>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+          <!-- messages injected by JS -->
+          <div class="typing-wrap" id="typingWrap">
+            <div class="typing-indicator">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: HOW CRAFTLY WORKS -->
+<div class="how-section" id="how">
+  <div class="how-inner">
+    <p class="section-label reveal">The Process</p>
+    <h2 class="section-title reveal">Four steps. Zero <em>cloud dependency.</em></h2>
+    <p class="section-body reveal">From question to action — everything happens locally, on your network, with your data never leaving Bangladesh.</p>
+
+    <div class="steps-track stagger-reveal">
+      <div class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <p class="step-number">Step 01</p>
+        <h4>You Ask</h4>
+        <p>Type your question in natural language. Bangla, English, or mixed — Craftly understands context.</p>
+        <div class="step-detail">
+          <p>Voice input and Bangla keyboard support coming soon.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a4 4 0 0 1 4 4c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2a4 4 0 0 1 4-4z"/>
+            <path d="M9 8v2a3 3 0 0 0 6 0V8"/>
+            <circle cx="12" cy="16" r="1"/>
+            <path d="M7 13a5 5 0 0 0 10 0"/>
+            <path d="M12 17v4"/>
+            <path d="M8 21h8"/>
+          </svg>
+        </div>
+        <p class="step-number">Step 02</p>
+        <h4>Agent Thinks</h4>
+        <p>The AI agent plans a multi-step action — not just a text response, a real workflow.</p>
+        <div class="step-detail">
+          <p>Powered by a locally fine-tuned LLM for Bangladeshi context.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"/>
+            <circle cx="5" cy="5" r="1.5"/>
+            <circle cx="19" cy="5" r="1.5"/>
+            <circle cx="5" cy="19" r="1.5"/>
+            <circle cx="19" cy="19" r="1.5"/>
+            <line x1="9.5" y1="9.5" x2="6.5" y2="6.5"/>
+            <line x1="14.5" y1="9.5" x2="17.5" y2="6.5"/>
+            <line x1="9.5" y1="14.5" x2="6.5" y2="17.5"/>
+            <line x1="14.5" y1="14.5" x2="17.5" y2="17.5"/>
+          </svg>
+        </div>
+        <p class="step-number">Step 03</p>
+        <h4>Mesh Searches</h4>
+        <p>Your query hits the local device mesh. Nearby nodes contribute inference power privately.</p>
+        <div class="step-detail">
+          <p>Zero raw data is shared — only encrypted inference tokens.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <p class="step-number">Step 04</p>
+        <h4>Action Delivered</h4>
+        <p>Real results: a blood donor found, a document translated, a connection made. Not just words.</p>
+        <div class="step-detail">
+          <p>Craftly acts in the real world through agent capabilities.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE INFERENCE TERMINAL -->
+<div class="terminal-section">
+  <div class="terminal-inner reveal">
+    <div class="terminal-card">
+      <div class="terminal-header">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <span class="terminal-title">Local Inference — Live</span>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <!-- lines injected by JS -->
+        <span class="terminal-cursor" id="terminalCursor"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: WORKSPACE + DECENTRALIZED -->
+<div class="workspace-section" id="workspace">
+  <div class="workspace-inner">
+    <div>
+      <p class="section-label reveal">Craftly Workspace</p>
+      <h2 class="section-title reveal">A shared brain for <em>your entire team.</em></h2>
+      <p class="section-body reveal">Craftly Workspace lets your team deploy a private AI assistant trained on your own data — from docs to workflows. Everyone contributes. Everyone benefits.</p>
+      <div class="feature-pills reveal">
+        <span class="pill">Team Inference</span>
+        <span class="pill">Private Data</span>
+        <span class="pill">Shared Context</span>
+        <span class="pill">Role-based Access</span>
+        <span class="pill">One-click Onboarding</span>
+      </div>
+    </div>
+    <div class="screenshots-grid reveal">
+
+      <!-- 3D Wraps Added to Screenshot Cards -->
+      <div class="screenshot-card wide tilt-wrap">
+        <div class="screenshot-inner tilt-target">
+            <img src="2.png" alt="Craftly Onboarding Chat Interface" loading="lazy">
+        </div>
+      </div>
+      <div class="screenshot-card tilt-wrap">
+        <div class="screenshot-inner tilt-target">
+            <img src="3.png" alt="Decentralized Node View" loading="lazy">
+        </div>
+      </div>
+      <div class="screenshot-card tilt-wrap">
+        <div class="screenshot-inner tilt-target">
+            <img src="1.png" alt="Network Graph" loading="lazy">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DECENTRALIZED TRAINING -->
+<section>
+  <div class="decentral-section">
+    <div>
+      <p class="section-label reveal">Decentralized Training</p>
+      <h2 class="section-title reveal">Your device is a <em>node in the network.</em></h2>
+      <p class="section-body reveal">Craftly runs inference across a mesh of opted-in devices. No single server. No foreign cloud. Every phone, every laptop in Bangladesh can become part of the intelligence fabric.</p>
+      <div class="stat-row reveal">
+        <div class="stat-item">
+          <div class="stat-number" data-count="3" data-suffix="">3</div>
+          <div class="stat-label">Active nodes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="5" data-suffix="ms">&lt;5ms</div>
+          <div class="stat-label">Local latency</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="100" data-suffix="%">100%</div>
+          <div class="stat-label">Local data</div>
+        </div>
+      </div>
+    </div>
+    <div class="node-visual reveal">
+      <div class="node-canvas-wrap">
+        <canvas id="nodeCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: MESH NETWORK ANIMATION -->
+<section class="mesh-section" id="mesh">
+  <div class="mesh-inner">
+    <p class="section-label reveal">Agent Network</p>
+    <h2 class="section-title reveal" style="max-width:780px;">Agent-to-agent networking is <em>the future.</em></h2>
+    <p class="section-body reveal">Every device runs its own Craftly Agent. Agents talk directly to each other — no cloud, no central server. Queries fan out across the mesh and are answered by the nearest capable agent, privately, on your hardware.</p>
+    <div class="mesh-canvas-wrap reveal">
+      <canvas id="meshCanvas"></canvas>
+      <div class="mesh-legend">
+        <div class="mesh-legend-item"><span class="legend-dot legend-phone"></span> Origin Agent</div>
+        <div class="mesh-legend-item"><span class="legend-dot legend-device"></span> Peer Agent</div>
+        <div class="mesh-legend-item"><span class="legend-dot legend-inference"></span> Agent Message</div>
+        <div class="mesh-legend-item"><span class="legend-dot legend-gradient"></span> Inference Result</div>
+      </div>
+      <div class="mesh-status"><span class="mesh-status-dot"></span> <span id="meshStatusText">Initializing</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: CHARTS & INFOGRAPHICS -->
+<div class="charts-section" id="numbers">
+  <div class="charts-inner">
+    <p class="section-label reveal">The Case for Local AI</p>
+    <h2 class="section-title reveal" style="max-width:780px;">The numbers speak. <em>Bangladesh cannot wait.</em></h2>
+
+    <div class="charts-grid">
+
+      <!-- DONUT CHART: Data Sovereignty -->
+      <div class="chart-card reveal" id="donutCard">
+        <p class="chart-label">Data Sovereignty</p>
+        <h3 class="chart-heading">100% on-device</h3>
+        <div class="donut-wrap">
+          <div class="donut-svg-wrap">
+            <svg class="donut-svg" viewBox="0 0 160 160">
+              <circle class="donut-track" cx="80" cy="80" r="70"/>
+              <circle class="donut-fill" id="donutFill" cx="80" cy="80" r="70"/>
+            </svg>
+            <div class="donut-center-text" id="donutPct">0%</div>
+          </div>
+          <div class="donut-details">
+            <div class="detail-item"><span class="detail-dot white"></span> Processed locally</div>
+            <div class="detail-item"><span class="detail-dot grey"></span> Sent to foreign cloud</div>
+            <div style="margin-top:16px; font-size:13px; color:#666; font-weight:300; line-height:1.6;">
+              Every query, every inference, every byte of data stays on Bangladeshi-owned hardware.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BAR CHART: Inference Latency -->
+      <div class="chart-card reveal" id="barCard">
+        <p class="chart-label">Inference Latency</p>
+        <h3 class="chart-heading">Speed of locality</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Craftly Local</span>
+            <div class="bar-track">
+              <div class="bar-fill" data-width="4%"></div>
+            </div>
+            <span class="bar-value">~5ms</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Regional Cloud</span>
+            <div class="bar-track">
+              <div class="bar-fill dark" data-width="35%"></div>
+            </div>
+            <span class="bar-value">~120ms</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Int'l Cloud</span>
+            <div class="bar-track">
+              <div class="bar-fill darker" data-width="100%"></div>
+            </div>
+            <span class="bar-value">~340ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESS BARS: Language Coverage -->
+      <div class="chart-card reveal" id="progressCard">
+        <p class="chart-label">AI Language Coverage</p>
+        <h3 class="chart-heading">The gap is real</h3>
+        <div class="progress-group">
+          <div class="progress-row">
+            <div class="progress-header">
+              <span class="progress-label">English</span>
+              <span class="progress-pct">97%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" data-width="97%"></div>
+            </div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-header">
+              <span class="progress-label">Hindi</span>
+              <span class="progress-pct">34%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill muted" data-width="34%"></div>
+            </div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-header">
+              <span class="progress-label">Bangla</span>
+              <span class="progress-pct">8%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill dim" data-width="8%"></div>
+            </div>
+          </div>
+        </div>
+        <p class="progress-caption">170 million Bangla speakers deserve AI that understands them. Craftly is building it.</p>
+      </div>
+
+      <!-- COUNTER STATS CARD -->
+      <div class="chart-card reveal" id="counterCard">
+        <p class="chart-label">By the Numbers</p>
+        <h3 class="chart-heading">Building momentum</h3>
+        <div class="stat-counter-grid">
+          <div class="counter-item">
+            <div class="counter-value" data-target="170" data-suffix="M">0</div>
+            <div class="counter-label">Bangla speakers</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-value" data-target="3" data-suffix="">0</div>
+            <div class="counter-label">Active nodes</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-value" data-target="100" data-suffix="%">0</div>
+            <div class="counter-label">Data local</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE TICKER -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item"><span class="marquee-dot"></span>3 nodes active in Dhaka</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>100% local inference</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Zero data leaves Bangladesh</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Bangla-first AI model</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Join the mesh network</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Powered by your devices</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Decentralized by design</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Sovereignty through code</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="marquee-item"><span class="marquee-dot"></span>3 nodes active in Dhaka</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>100% local inference</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Zero data leaves Bangladesh</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Bangla-first AI model</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Join the mesh network</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Powered by your devices</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Decentralized by design</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Sovereignty through code</div>
+  </div>
+</div>
+
+<!-- SECTION 3: WHY YOUNG PEOPLE OF BANGLADESH -->
+<section class="youth-section" id="mission">
+  <div class="youth-inner">
+    <p class="section-label reveal">The Mission</p>
+    <h2 class="section-title reveal" style="max-width:780px;">Bangladesh does not need to <em>wait for permission</em> to build the future.</h2>
+
+    <div class="youth-pillars">
+      <div class="pillar reveal">
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <p class="pillar-num">I — Hunger</p>
+        <h3>We have more to prove.</h3>
+        <p>Every great technology era was driven by people who had nothing to lose and everything to build. Bangladesh's young engineers carry that same fire — the kind that turns late nights into breakthroughs. That urgency is not a disadvantage. It is our engine.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <p class="pillar-num">II — Scale</p>
+        <h3>170 million minds in the loop.</h3>
+        <p>A model trained on Bangladeshi language, culture, and lived experience does not exist yet. But it needs to. Craftly Robot is that model — and every young person who joins the team adds a perspective Silicon Valley cannot replicate or purchase.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <p class="pillar-num">III — Ownership</p>
+        <h3>We build it. We own it.</h3>
+        <p>For too long, the tools that shape our country's information flow were built elsewhere, tuned for other languages, other problems. Craftly is Bangladesh's first attempt to own the full stack — from inference hardware to the LLM itself. That changes everything.</p>
+      </div>
+    </div>
+
+    <div class="manifesto-block reveal">
+      <blockquote>
+        "A generation that builds its own LLM does not just create software — it decides how its language is understood, how its problems are solved, and how its future is imagined. That is a form of sovereignty."
+      </blockquote>
+      <cite>— Craftly Team, Dhaka, 2025</cite>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: JOIN THE TEAM -->
+<section style="padding: 0;" id="join">
+  <div class="join-section">
+    <div class="join-left">
+      <p class="section-label reveal">Join the Team</p>
+      <h2 class="section-title reveal">Be among the first to build Bangladesh's AI.</h2>
+      <p class="section-body reveal">We are looking for curious, driven people across engineering, research, design, and community. You do not need a perfect résumé. You need a real reason to show up every day.</p>
+    </div>
+
+    <div class="form-wrap reveal">
+      <div id="formContainer">
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Full Name</label>
+            <input type="text" id="fullName" placeholder="Taslima Akter" autocomplete="name">
+          </div>
+          <div class="form-row">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" id="phone" placeholder="+880 17XX XXXXXX">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-row">
+          <label>Area of Interest</label>
+          <select id="area">
+            <option value="" disabled selected>Select your focus —</option>
+            <option>AI / Machine Learning</option>
+            <option>Backend Engineering</option>
+            <option>Frontend / Mobile Development</option>
+            <option>Research & Linguistics</option>
+            <option>Design & Product</option>
+            <option>Community & Outreach</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Why Craftly?</label>
+          <textarea id="why" placeholder="Tell us the one reason you want to help build this…"></textarea>
+        </div>
+        <button class="submit-btn" id="submitBtn">Submit Application →</button>
+        <p class="form-note">No experience gatekeeping. We review every application personally.</p>
+      </div>
+      <div class="success-msg" id="successMsg">
+        <div class="success-icon">✓</div>
+        <h3>Application received.</h3>
+        <p>We'll reach out within 48 hours. Welcome to the beginning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="logo.png" alt="Craftly Logo">
+  </div>
+  <div class="footer-note">© 2025 Craftly. Building Bangladesh's Intelligence Layer.</div>
+</footer>
+
+<script>
+  // ── SCROLL PROGRESS BAR ──────────────────────────────────────
+  const scrollBar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    scrollBar.style.width = progress + '%';
+  });
+
+  // ── PARTICLE CANVAS ─────────────────────────────────────────
+  (function() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const hero = canvas.parentElement;
+    let particles = [];
+    let mouseX = -1000, mouseY = -1000;
+    let animId;
+    const PARTICLE_COUNT = window.innerWidth < 768 ? 35 : 70;
+    const CONNECT_DIST = 120;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = hero.offsetWidth * dpr;
+      canvas.height = hero.offsetHeight * dpr;
+      canvas.style.width = hero.offsetWidth + 'px';
+      canvas.style.height = hero.offsetHeight + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    class Particle {
+      constructor(w, h) {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.r = Math.random() * 1.5 + 0.5;
+        this.opacity = Math.random() * 0.4 + 0.1;
+      }
+      update(w, h) {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > w) this.vx *= -1;
+        if (this.y < 0 || this.y > h) this.vy *= -1;
+
+        // Mouse repulsion
+        const dx = this.x - mouseX;
+        const dy = this.y - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100 && dist > 0) {
+          this.x += (dx / dist) * 1.5;
+          this.y += (dy / dist) * 1.5;
+        }
+      }
+      draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,' + this.opacity + ')';
+        ctx.fill();
+      }
+    }
+
+    function init() {
+      resize();
+      particles = [];
+      const w = hero.offsetWidth;
+      const h = hero.offsetHeight;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new Particle(w, h));
+      }
+    }
+
+    function animate() {
+      const w = hero.offsetWidth;
+      const h = hero.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      particles.forEach(p => { p.update(w, h); p.draw(ctx); });
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = 'rgba(255,255,255,' + (0.06 * (1 - dist / CONNECT_DIST)) + ')';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      animId = requestAnimationFrame(animate);
+    }
+
+    // Pointer-events on hero, not canvas (canvas is pointer-events: none)
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    });
+    hero.addEventListener('mouseleave', () => { mouseX = -1000; mouseY = -1000; });
+
+    window.addEventListener('resize', () => { resize(); });
+    init();
+    animate();
+  })();
+
+  // ── 3D TILT ANIMATION ───────────────────────────────────────
+  const tiltWraps = document.querySelectorAll('.tilt-wrap');
+  tiltWraps.forEach(wrap => {
+    const target = wrap.querySelector('.tilt-target');
+    target.style.transformStyle = 'preserve-3d';
+    target.style.transition = 'transform 0.15s ease-out, box-shadow 0.15s ease-out';
+
+    wrap.addEventListener('mousemove', (e) => {
+      const rect = wrap.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -12;
+      const rotateY = ((x - centerX) / centerX) * 12;
+      target.style.transform = 'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateZ(15px)';
+      target.style.boxShadow = (-rotateY) + 'px ' + (rotateX + 15) + 'px 30px rgba(0,0,0,0.5)';
+    });
+
+    wrap.addEventListener('mouseleave', () => {
+      target.style.transition = 'transform 0.6s ease, box-shadow 0.6s ease';
+      target.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
+      target.style.boxShadow = '';
+    });
+
+    wrap.addEventListener('mouseenter', () => {
+      target.style.transition = 'transform 0.15s ease-out, box-shadow 0.15s ease-out';
+    });
+  });
+
+  // ── CHAT DEMO ──────────────────────────────────────────────
+  const messages = [
+    // Step 1: You Ask
+    { role: 'user',  type: 'text', text: 'I need B+ blood now its emergency my wife is at hospital' },
+    // Step 2: Agent Thinks
+    { role: 'bot',   type: 'text', text: 'Let me find it for you. I will search blood nearby.' },
+    { role: 'bot',   type: 'card', title: '🔍 Looking for B(+ve) blood', items: [
+        'Finding people with B(+ve) blood',
+        'Mapping people within 1km radius range',
+    ]},
+    // Step 3: Mesh Searches
+    { role: 'bot', type: 'text', text: 'I found 3 nearby people with B(+ve) blood. Let me check their availability and priority to ensure we are asking help from the right people.' },
+    { role: 'bot', type: 'card', title: '🤝🏼 Checking alignment', items: [
+        'Wasif: Hello buddies Wasif\'s wife is at hospital now and need B(+ve) blood urgent. Can anyone help us with that?',
+        'Taslima: Sure thing man. She is usually free at 6pm. Confirm me so I can confirm her.',
+        'Borsha: Can\'t help right now. Borsha herself is sick.',
+        'Maria: Sorry, Maria is afraid of blood donation.',
+    ]},
+    // Step 4: Action Delivered
+    { role: 'bot',  type: 'text', text: 'I found Taslima Akter near you and she is free at 6pm. Should I confirm her and send a push notification?' },
+    { role: 'user', type: 'text', text: 'Yes do fast' },
+    { role: 'bot',  type: 'text', text: 'Done! I notified Taslima\'s agent and he will inform her to contact with you on time.' },
+  ];
+
+  let current = 0;
+  const chatArea = document.getElementById('chatArea');
+  const typingWrap = document.getElementById('typingWrap');
+
+  function appendMsg(msg) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + msg.role;
+
+    if (msg.type === 'text') {
+      div.innerHTML = '<div class="bubble">' + msg.text + '</div>';
+    } else if (msg.type === 'card') {
+      const items = msg.items.map(i => '<div class="card-item">' + i + '</div>').join('');
+      div.innerHTML = '<div class="bubble-card"><div class="card-title">' + msg.title + '</div>' + items + '</div>';
+    }
+
+    chatArea.insertBefore(div, typingWrap);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { div.classList.add('visible'); });
+    });
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function showTyping() {
+    chatArea.appendChild(typingWrap);
+    typingWrap.classList.add('active');
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+  function hideTyping() { typingWrap.classList.remove('active'); }
+
+  function playNext() {
+    if (current >= messages.length) {
+      setTimeout(() => { restartDemo(); }, 3500);
+      return;
+    }
+    const msg = messages[current++];
+    if (msg.role === 'bot') {
+      showTyping();
+      const delay = msg.type === 'card' ? 1400 : 900;
+      setTimeout(() => {
+        hideTyping();
+        appendMsg(msg);
+        setTimeout(playNext, msg.type === 'card' ? 700 : 500);
+      }, delay);
+    } else {
+      appendMsg(msg);
+      setTimeout(playNext, 600);
+    }
+  }
+
+  function restartDemo() {
+    chatArea.querySelectorAll('.msg').forEach(el => el.remove());
+    current = 0;
+    setTimeout(playNext, 600);
+  }
+
+  setTimeout(playNext, 1200);
+
+  // ── TERMINAL AUTO-TYPE ──────────────────────────────────────
+  (function() {
+    const termBody = document.getElementById('terminalBody');
+    const termCursor = document.getElementById('terminalCursor');
+    if (!termBody) return;
+
+    const lines = [
+      { text: '> craftly --query "B+ blood emergency, Dhanmondi"', cls: 'cmd', step: 0 },
+      { text: '> Initializing local inference engine...', cls: '', step: 1 },
+      { text: '> Scanning mesh network... 3 nodes active', cls: 'highlight', step: 2 },
+      { text: '> Node [dh-central-01] — Searching local contacts...', cls: '', step: 2 },
+      { text: '> Node [dh-north-02] — Checking blood bank records...', cls: '', step: 2 },
+      { text: '> Node [dh-south-03] — Cross-referencing availability...', cls: '', step: 2 },
+      { text: '> ✓ Match found: Taslima Akter — B(+ve) — 1.2km away', cls: 'success', step: 3 },
+      { text: '> ✓ Availability confirmed: Free at 6:00 PM', cls: 'success', step: 3 },
+      { text: '> ✓ Push notification sent to Taslima\'s device', cls: 'success', step: 3 },
+      { text: '', cls: '', step: 3 },
+      { text: '[Complete] Zero bytes left your local network.', cls: 'success', step: 3 },
+    ];
+
+    // Get step elements for syncing (shared with auto-cycle)
+    const stepEls = document.querySelectorAll('.steps-track .step');
+    let terminalDriving = false;
+    function setActiveStep(idx) {
+      terminalDriving = true;
+      stepEls.forEach((el, i) => {
+        if (i === idx) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+    }
+    function clearActiveSteps() {
+      terminalDriving = false;
+      stepEls.forEach(el => el.classList.remove('active'));
+    }
+
+    // ── AUTO-CYCLE STEPS (runs when terminal is NOT driving) ──
+    let autoCycleIdx = 0;
+    let autoCycleTimer = null;
+    let autoCycleStarted = false;
+
+    function autoCycleStep() {
+      if (terminalDriving) {
+        // Terminal is active, pause auto-cycle
+        autoCycleTimer = setTimeout(autoCycleStep, 500);
+        return;
+      }
+      stepEls.forEach((el, i) => {
+        if (i === autoCycleIdx) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+      autoCycleIdx = (autoCycleIdx + 1) % stepEls.length;
+      autoCycleTimer = setTimeout(autoCycleStep, 2500);
+    }
+
+    // Start auto-cycle when how-section scrolls into view
+    const howSection = document.querySelector('.how-section');
+    if (howSection) {
+      const howObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting && !autoCycleStarted) {
+            autoCycleStarted = true;
+            autoCycleStep();
+            howObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      howObs.observe(howSection);
+    }
+
+    let lineIdx = 0;
+    let charIdx = 0;
+    let currentLineEl = null;
+    let terminalStarted = false;
+
+    function createLine(cls) {
+      const el = document.createElement('div');
+      el.className = 'terminal-line visible';
+      if (cls) el.innerHTML = '<span class="' + cls + '"></span>';
+      termBody.insertBefore(el, termCursor);
+      return el;
+    }
+
+    function typeChar() {
+      if (lineIdx >= lines.length) {
+        // Restart after pause
+        setTimeout(() => {
+          // Remove all terminal lines
+          termBody.querySelectorAll('.terminal-line').forEach(el => el.remove());
+          clearActiveSteps();
+          lineIdx = 0;
+          charIdx = 0;
+          currentLineEl = null;
+          setTimeout(typeChar, 500);
+        }, 4000);
+        return;
+      }
+
+      const line = lines[lineIdx];
+
+      if (!currentLineEl) {
+        currentLineEl = createLine(line.cls);
+        // Sync: activate corresponding step
+        if (line.step !== undefined) setActiveStep(line.step);
+        if (line.text === '') {
+          lineIdx++;
+          currentLineEl = null;
+          setTimeout(typeChar, 200);
+          return;
+        }
+      }
+
+      const target = line.cls ? currentLineEl.querySelector('span') : currentLineEl;
+      if (charIdx < line.text.length) {
+        target.textContent += line.text[charIdx];
+        charIdx++;
+        const speed = line.cls === 'cmd' ? 35 : 20;
+        setTimeout(typeChar, speed + Math.random() * 15);
+      } else {
+        lineIdx++;
+        charIdx = 0;
+        currentLineEl = null;
+        const pause = line.cls === 'success' ? 400 : 250;
+        setTimeout(typeChar, pause);
+      }
+
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    // Start terminal when scrolled into view
+    const termObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !terminalStarted) {
+          terminalStarted = true;
+          setTimeout(typeChar, 600);
+          termObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    termObs.observe(termBody);
+  })();
+
+  // ── COUNTER ANIMATION ──────────────────────────────────────
+  (function() {
+    function animateCounter(el, target, suffix) {
+      const duration = 2000;
+      const start = performance.now();
+
+      function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * target);
+        el.textContent = current + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    const counterEls = document.querySelectorAll('.counter-value[data-target]');
+    const counterObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el = e.target;
+          const target = parseInt(el.dataset.target);
+          const suffix = el.dataset.suffix || '';
+          animateCounter(el, target, suffix);
+          counterObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    counterEls.forEach(el => counterObs.observe(el));
+  })();
+
+  // ── CHART ANIMATIONS (triggered on scroll) ─────────────────
+  (function() {
+    // Donut chart
+    const donutFill = document.getElementById('donutFill');
+    const donutPct = document.getElementById('donutPct');
+    const donutCard = document.getElementById('donutCard');
+
+    if (donutCard) {
+      const donutObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            donutFill.classList.add('animated');
+
+            // Animate percentage text
+            const duration = 2000;
+            const start = performance.now();
+            function animPct(now) {
+              const elapsed = now - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              donutPct.textContent = Math.round(eased * 100) + '%';
+              if (progress < 1) requestAnimationFrame(animPct);
+            }
+            requestAnimationFrame(animPct);
+            donutObs.unobserve(donutCard);
+          }
+        });
+      }, { threshold: 0.3 });
+      donutObs.observe(donutCard);
+    }
+
+    // Bar chart
+    const barCard = document.getElementById('barCard');
+    if (barCard) {
+      const barObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const fills = barCard.querySelectorAll('.bar-fill');
+            fills.forEach((fill, i) => {
+              setTimeout(() => {
+                fill.style.width = fill.dataset.width;
+              }, i * 250);
+            });
+            barObs.unobserve(barCard);
+          }
+        });
+      }, { threshold: 0.3 });
+      barObs.observe(barCard);
+    }
+
+    // Progress bars
+    const progressCard = document.getElementById('progressCard');
+    if (progressCard) {
+      const progObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const fills = progressCard.querySelectorAll('.progress-fill');
+            fills.forEach((fill, i) => {
+              setTimeout(() => {
+                fill.style.width = fill.dataset.width;
+              }, i * 300);
+            });
+            progObs.unobserve(progressCard);
+          }
+        });
+      }, { threshold: 0.3 });
+      progObs.observe(progressCard);
+    }
+  })();
+
+  // ── SCROLL REVEAL ────────────────────────────────────────────
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal, .stagger-reveal').forEach(el => obs.observe(el));
+
+  // ── AGENT NETWORK ANIMATION ───────────────────────────────────
+  (function() {
+    const canvas = document.getElementById('meshCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const statusTextEl = document.getElementById('meshStatusText');
+    let W, H;
+    let meshStarted = false;
+
+    // Agent definitions — arranged in a true mesh ring + center peers
+    // No hub, every agent is equal
+    const agentDefs = [
+      { rx: 0.12, ry: 0.50, label: 'Your Agent', type: 'origin' },   // 0 — origin
+      { rx: 0.25, ry: 0.22, label: 'Agent Alpha', type: 'peer' },    // 1
+      { rx: 0.50, ry: 0.12, label: 'Agent Beta', type: 'peer' },     // 2
+      { rx: 0.75, ry: 0.22, label: 'Agent Gamma', type: 'peer' },    // 3
+      { rx: 0.88, ry: 0.50, label: 'Agent Delta', type: 'peer' },    // 4
+      { rx: 0.75, ry: 0.78, label: 'Agent Epsilon', type: 'peer' },  // 5
+      { rx: 0.50, ry: 0.88, label: 'Agent Zeta', type: 'peer' },     // 6
+      { rx: 0.25, ry: 0.78, label: 'Agent Eta', type: 'peer' },      // 7
+      { rx: 0.50, ry: 0.48, label: 'Agent Theta', type: 'peer' },    // 8 — inner peer
+    ];
+
+    let agents = [];
+    let connections = [];
+    let packets = [];
+    let frameCount = 0;
+
+    // ── Simulation state machine ──────────────────────────────────
+    // Two alternating modes:
+    //   'a2a'       — Agent-to-Agent: random peer conversations hop across the mesh
+    //   'mesh_inf'  — Decentralized Mesh Inference: query fans out from origin,
+    //                 capable agents process it and return results via multiple paths
+    let simMode = 'a2a';
+    let modeFrames = 0;
+    const A2A_DURATION = 300;     // frames in a2a mode before switching
+    const INF_DURATION = 360;     // frames in mesh_inf mode before switching
+
+    // A2A sub-state
+    let a2aTimer = 0;
+    const A2A_SPAWN_INTERVAL = 45; // frames between random agent conversations
+
+    // Mesh inference sub-state
+    let infPhase = 'idle'; // 'idle' | 'fanout' | 'processing' | 'converge' | 'done'
+    let infTimer = 0;
+    let processingAgents = []; // which agents are "computing" a result
+    const INF_PHASE_IDLE = 60;
+    const INF_PHASE_PROCESS = 80;
+    const INF_PHASE_CONVERGE_WAIT = 40;
+    const INF_PHASE_DONE = 60;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      W = rect.width;
+      H = rect.height;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      agents = agentDefs.map((d, i) => ({
+        x: d.rx * W, y: d.ry * H,
+        label: d.label, type: d.type, id: i,
+        radius: d.type === 'origin' ? 22 : 15,
+        glow: 0, active: false, compProgress: 0, statusText: '',
+      }));
+
+      // Build connections — true mesh: connect every agent within range
+      connections = [];
+      const maxDist = Math.max(W, H) * 0.44;
+      for (let i = 0; i < agents.length; i++) {
+        for (let j = i + 1; j < agents.length; j++) {
+          const dx = agents[i].x - agents[j].x;
+          const dy = agents[i].y - agents[j].y;
+          if (Math.sqrt(dx * dx + dy * dy) < maxDist) {
+            connections.push({ a: i, b: j });
+          }
+        }
+      }
+    }
+
+    function spawnPacket(fromId, toId, color, speed, kind, label) {
+      packets.push({
+        from: fromId, to: toId,
+        progress: 0,
+        speed: speed || 0.022,
+        color: color,
+        kind: kind || 'msg',   // 'msg' | 'result'
+        label: label || '',
+        alive: true,
+      });
+    }
+
+    // Returns agent IDs directly connected to the given agent
+    function neighborsOf(id) {
+      return connections
+        .filter(c => c.a === id || c.b === id)
+        .map(c => c.a === id ? c.b : c.a);
+    }
+
+    // ── A2A simulation update ─────────────────────────────────────
+    function updateA2A() {
+      if (statusTextEl) statusTextEl.textContent = 'Agent-to-Agent Networking';
+
+      a2aTimer++;
+      modeFrames++;
+
+      // Every interval: pick two random non-adjacent agents and route a message
+      // through the mesh (multi-hop)
+      if (a2aTimer >= A2A_SPAWN_INTERVAL) {
+        a2aTimer = 0;
+
+        const src = Math.floor(Math.random() * agents.length);
+        let dst;
+        do { dst = Math.floor(Math.random() * agents.length); } while (dst === src);
+
+        // Find a simple 1 or 2-hop path from src to dst
+        const path = findPath(src, dst);
+        if (path && path.length >= 2) {
+          const msgColor = '#06b6d4';
+          agents[src].glow = 1.0;
+          agents[src].active = true;
+          agents[src].statusText = 'Sending';
+
+          // Spawn packet for each hop with staggered delay emulated via progress offset
+          for (let h = 0; h < path.length - 1; h++) {
+            const delay = h;
+            ((hop) => {
+              setTimeout(() => {
+                spawnPacket(path[hop], path[hop + 1], msgColor, 0.025, 'msg', '');
+                agents[path[hop]].glow = 1.0;
+                agents[path[hop]].active = true;
+              }, hop * 700);
+            })(h);
+          }
+          // Light up destination
+          setTimeout(() => {
+            agents[dst].glow = 1.0;
+            agents[dst].active = true;
+            agents[dst].statusText = 'Received';
+          }, (path.length - 1) * 700 + 300);
+
+          // Dim out after a while
+          setTimeout(() => {
+            path.forEach(id => {
+              agents[id].active = false;
+              agents[id].statusText = '';
+            });
+          }, (path.length - 1) * 700 + 900);
+        }
+      }
+
+      if (modeFrames >= A2A_DURATION) {
+        // Switch to mesh inference
+        simMode = 'mesh_inf';
+        modeFrames = 0;
+        infPhase = 'idle';
+        infTimer = 0;
+        processingAgents = [];
+        agents.forEach(a => { a.active = false; a.glow = 0; a.statusText = ''; });
+      }
+    }
+
+    // ── Mesh Inference simulation update ─────────────────────────
+    function updateMeshInf() {
+      modeFrames++;
+      infTimer++;
+
+      if (infPhase === 'idle') {
+        if (statusTextEl) statusTextEl.textContent = 'Decentralized Mesh Inference';
+        agents[0].glow = Math.min(1, agents[0].glow + 0.04);
+        agents[0].statusText = 'Query Ready';
+
+        if (infTimer >= INF_PHASE_IDLE) {
+          infPhase = 'fanout';
+          infTimer = 0;
+          agents[0].active = true;
+          agents[0].statusText = 'Broadcasting';
+
+          // Fan out query to ALL direct neighbors simultaneously (no routing through hub)
+          const neighbors = neighborsOf(0);
+          neighbors.forEach((nid, i) => {
+            setTimeout(() => {
+              spawnPacket(0, nid, '#06b6d4', 0.02, 'msg', 'query');
+              agents[nid].statusText = 'Processing';
+            }, i * 80);
+          });
+          processingAgents = neighbors;
+        }
+
+      } else if (infPhase === 'fanout') {
+        if (statusTextEl) statusTextEl.textContent = 'Decentralized Mesh Inference — Fanning Out';
+
+        // Activate processing agents as query packets arrive
+        processingAgents.forEach(id => {
+          if (agents[id]) {
+            agents[id].glow = Math.min(1, agents[id].glow + 0.03);
+            agents[id].compProgress = Math.min(1, agents[id].compProgress + 0.014);
+            agents[id].active = true;
+          }
+        });
+
+        if (infTimer >= INF_PHASE_PROCESS) {
+          infPhase = 'converge';
+          infTimer = 0;
+
+          // Processing complete — send results back to origin via DIFFERENT paths
+          // Each processing agent forwards its partial result to the origin through
+          // a randomly selected intermediate neighbor (true mesh routing, not direct)
+          processingAgents.forEach((pid, i) => {
+            agents[pid].statusText = 'Returning';
+            agents[pid].compProgress = 0;
+
+            const agentNeighbors = neighborsOf(pid);
+            // Prefer a neighbor that isn't the origin to show multi-hop
+            const hop = agentNeighbors.find(n => n !== 0) || agentNeighbors[0];
+
+            setTimeout(() => {
+              spawnPacket(pid, hop, '#22c55e', 0.022, 'result', 'result');
+              // Then from hop to origin if hop != origin
+              if (hop !== 0) {
+                setTimeout(() => {
+                  spawnPacket(hop, 0, '#22c55e', 0.022, 'result', 'result');
+                }, 600);
+              }
+            }, i * 120);
+          });
+
+          // Final: origin glows when results converge
+          setTimeout(() => {
+            agents[0].glow = 1.0;
+            agents[0].statusText = 'Results Merged';
+            processingAgents.forEach(id => {
+              agents[id].active = false;
+              agents[id].statusText = '';
+            });
+            infPhase = 'done';
+            infTimer = 0;
+          }, processingAgents.length * 120 + 1400);
+        }
+
+      } else if (infPhase === 'done') {
+        if (statusTextEl) statusTextEl.textContent = 'Decentralized Mesh Inference — Complete ✓';
+
+        agents[0].glow = Math.max(0, 1.0 - infTimer * 0.02);
+
+        if (infTimer >= INF_PHASE_DONE || modeFrames >= INF_DURATION) {
+          // Switch back to A2A
+          simMode = 'a2a';
+          modeFrames = 0;
+          a2aTimer = 0;
+          agents.forEach(a => { a.active = false; a.glow = 0; a.statusText = ''; a.compProgress = 0; });
+        }
+      }
+    }
+
+    // ── BFS path finder ──────────────────────────────────────────
+    function findPath(src, dst) {
+      const visited = new Set([src]);
+      const queue = [[src]];
+      while (queue.length) {
+        const path = queue.shift();
+        const node = path[path.length - 1];
+        if (node === dst) return path;
+        for (const nb of neighborsOf(node)) {
+          if (!visited.has(nb)) {
+            visited.add(nb);
+            queue.push([...path, nb]);
+          }
+        }
+      }
+      return null;
+    }
+
+    // ── Draw one agent node ───────────────────────────────────────
+    function drawAgent(agent) {
+      const { x, y, radius, label, type, active, glow, compProgress, statusText } = agent;
+
+      // Outer glow halo
+      if (glow > 0.01) {
+        const glowColor = type === 'origin'
+          ? `rgba(34,197,94,${glow * 0.35})`
+          : (simMode === 'mesh_inf' && active)
+            ? `rgba(6,182,212,${glow * 0.3})`
+            : `rgba(99,102,241,${glow * 0.28})`;
+        const grad = ctx.createRadialGradient(x, y, radius, x, y, radius + 22);
+        grad.addColorStop(0, glowColor);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath();
+        ctx.arc(x, y, radius + 22, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      // Computation progress arc
+      if (active && compProgress > 0) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius + 7, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * compProgress);
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      // Spinning idle ring for ALL agents (slow, subtle)
+      ctx.beginPath();
+      const ringStart = (frameCount * 0.01) % (Math.PI * 2);
+      ctx.arc(x, y, radius + 4, ringStart, ringStart + Math.PI * 0.7);
+      ctx.strokeStyle = active
+        ? (type === 'origin' ? 'rgba(34,197,94,0.5)' : 'rgba(99,102,241,0.45)')
+        : 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Node fill
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      if (type === 'origin') {
+        const cg = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        cg.addColorStop(0, active ? '#4ade80' : '#1a2e1a');
+        cg.addColorStop(1, active ? '#166534' : '#0d1a0d');
+        ctx.fillStyle = cg;
+        ctx.fill();
+        ctx.strokeStyle = active ? '#4ade80' : '#2d6a4f';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else {
+        const cg = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        cg.addColorStop(0, active ? '#312e81' : '#111');
+        cg.addColorStop(1, active ? '#1e1b4b' : '#0a0a0a');
+        ctx.fillStyle = cg;
+        ctx.fill();
+        ctx.strokeStyle = active ? '#6366f1' : '#2a2a3a';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // Inner AI icon
+      ctx.fillStyle = active ? '#fff' : (type === 'origin' ? '#4ade80' : '#4b5563');
+      ctx.font = `700 ${radius > 18 ? 10 : 8}px Inter, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('AI', x, y);
+
+      // Agent label below
+      ctx.fillStyle = active ? '#d1d5db' : '#4b5563';
+      ctx.font = `500 10px Inter, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(label, x, y + radius + 8);
+
+      // Status sub-text
+      if (statusText) {
+        ctx.fillStyle = type === 'origin' ? '#4ade80' : '#818cf8';
+        ctx.font = `500 9px Inter, sans-serif`;
+        ctx.fillText(statusText, x, y + radius + 20);
+      }
+    }
+
+    // ── Main animation loop ───────────────────────────────────────
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+      frameCount++;
+
+      // Subtle grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.015)';
+      ctx.lineWidth = 1;
+      const gs = 42;
+      for (let gx = gs; gx < W; gx += gs) {
+        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+      }
+      for (let gy = gs; gy < H; gy += gs) {
+        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+      }
+
+      // Update simulation
+      if (simMode === 'a2a') updateA2A();
+      else updateMeshInf();
+
+      // Draw connections
+      connections.forEach(c => {
+        const a = agents[c.a], b = agents[c.b];
+        const bothActive = a.active && b.active;
+
+        // Highlight the connection if either end is active
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = bothActive
+          ? 'rgba(99,102,241,0.2)'
+          : (a.active || b.active)
+            ? 'rgba(255,255,255,0.08)'
+            : 'rgba(255,255,255,0.03)';
+        ctx.lineWidth = bothActive ? 1.5 : 0.75;
+        ctx.setLineDash(bothActive ? [] : [3, 7]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      });
+
+      // Draw & move packets
+      packets = packets.filter(p => p.alive);
+      packets.forEach(p => {
+        p.progress += p.speed;
+        if (p.progress >= 1.0) { p.alive = false; return; }
+
+        const a = agents[p.from], b = agents[p.to];
+        const px = a.x + (b.x - a.x) * p.progress;
+        const py = a.y + (b.y - a.y) * p.progress;
+
+        // Trail
+        const trailLen = 0.15;
+        const tp = Math.max(0, p.progress - trailLen);
+        const tx = a.x + (b.x - a.x) * tp;
+        const ty = a.y + (b.y - a.y) * tp;
+        ctx.beginPath();
+        ctx.moveTo(tx, ty);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = p.kind === 'result' ? 2 : 2.5;
+        ctx.stroke();
+
+        // Dot
+        ctx.beginPath();
+        ctx.arc(px, py, p.kind === 'result' ? 3.5 : 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        // Glow halo
+        ctx.beginPath();
+        ctx.arc(px, py, p.kind === 'result' ? 8 : 10, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + '33';
+        ctx.fill();
+
+        // Packet label if any
+        if (p.label) {
+          ctx.fillStyle = p.color;
+          ctx.font = '500 9px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(p.label, px, py - 7);
+        }
+      });
+
+      // Draw agents on top
+      agents.forEach(a => drawAgent(a));
+
+      // Decay glows smoothly
+      agents.forEach(a => {
+        if (a.glow > 0 && !a.active) a.glow = Math.max(0, a.glow - 0.012);
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // Start on scroll into view
+    const meshObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !meshStarted) {
+          meshStarted = true;
+          resize();
+          animate();
+          meshObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    meshObs.observe(canvas);
+
+    window.addEventListener('resize', () => { if (meshStarted) resize(); });
+  })();
+
+  // ── NODE NETWORK ANIMATION (Decentralized Training section) ──
+  (function() {
+    const canvas = document.getElementById('nodeCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, CX, CY, started = false;
+    let frame = 0;
+
+    // Node layout: index 0 = "Your Device" (center), 1-6 = outer ring, 7 = second ring
+    const nodeRoles = [
+      { label: 'Your Device', role: 'center',  color: '#ffffff', r: 0 },
+      { label: 'Node BDesh-1', role: 'peer',   color: '#a3e635', r: 1 },
+      { label: 'Node BDesh-2', role: 'peer',   color: '#38bdf8', r: 1 },
+      { label: 'Node BDesh-3', role: 'peer',   color: '#a3e635', r: 1 },
+      { label: 'Node BDesh-4', role: 'peer',   color: '#38bdf8', r: 1 },
+      { label: 'Node BDesh-5', role: 'peer',   color: '#a3e635', r: 1 },
+      { label: 'Node BDesh-6', role: 'peer',   color: '#38bdf8', r: 1 },
+      { label: 'Bridge-A',    role: 'bridge',  color: '#f59e0b', r: 2 },
+      { label: 'Bridge-B',    role: 'bridge',  color: '#f59e0b', r: 2 },
+    ];
+
+    let nodes = [];
+    let packets = [];
+
+    // Edges: center connects to all outer, outer connects to neighbors + bridges
+    const edgeDefs = [
+      [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],
+      [1,2],[2,3],[3,4],[4,5],[5,6],[6,1],
+      [1,7],[3,7],[5,8],[2,8],[7,8],
+      [0,7],[0,8],
+    ];
+
+    function setup() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      W = rect.width; H = rect.height;
+      CX = W / 2; CY = H / 2;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const R1 = Math.min(W, H) * 0.32; // outer ring radius
+      const R2 = Math.min(W, H) * 0.17; // bridge ring radius
+
+      nodes = nodeRoles.map((def, i) => {
+        let x = CX, y = CY;
+        if (i >= 1 && i <= 6) {
+          const angle = ((i - 1) / 6) * Math.PI * 2 - Math.PI / 2;
+          x = CX + Math.cos(angle) * R1;
+          y = CY + Math.sin(angle) * R1;
+        } else if (i === 7) {
+          x = CX + Math.cos(Math.PI * 0.25) * R2;
+          y = CY + Math.sin(Math.PI * 0.25) * R2;
+        } else if (i === 8) {
+          x = CX + Math.cos(Math.PI * 1.25) * R2;
+          y = CY + Math.sin(Math.PI * 1.25) * R2;
+        }
+        return {
+          id: i, x, y,
+          label: def.label, role: def.role,
+          baseColor: def.color,
+          radius: def.role === 'center' ? 20 : (def.role === 'bridge' ? 12 : 10),
+          glow: 0, pulse: Math.random() * Math.PI * 2,
+          pulseRings: [], // expanding rings [{r, alpha}]
+        };
+      });
+    }
+
+    function spawnPkt(from, to, color) {
+      packets.push({ from, to, progress: 0, speed: 0.018 + Math.random() * 0.012, color, alive: true });
+    }
+
+    // Periodically spawn packets along edges
+    let spawnTimer = 0;
+    function spawnRandom() {
+      spawnTimer++;
+      if (spawnTimer < 18) return;
+      spawnTimer = 0;
+      const edge = edgeDefs[Math.floor(Math.random() * edgeDefs.length)];
+      const dir = Math.random() > 0.5;
+      const from = dir ? edge[0] : edge[1];
+      const to   = dir ? edge[1] : edge[0];
+      const color = nodes[from].baseColor;
+      spawnPkt(from, to, color);
+      // occasionally generate a return
+      if (Math.random() < 0.4) {
+        setTimeout(() => spawnPkt(to, from, nodes[to].baseColor), 300 + Math.random() * 400);
+      }
+    }
+
+    // Pulse ring emitter from center periodically
+    let pulseTimer = 0;
+    function maybeEmitPulse() {
+      pulseTimer++;
+      if (pulseTimer % 90 === 0) {
+        nodes[0].pulseRings.push({ r: nodes[0].radius, alpha: 0.6 });
+      }
+      if (pulseTimer % 55 === 0 && Math.random() < 0.6) {
+        const id = 1 + Math.floor(Math.random() * 6);
+        nodes[id].pulseRings.push({ r: nodes[id].radius, alpha: 0.5 });
+      }
+    }
+
+    function drawEdge(a, b) {
+      const ax = nodes[a].x, ay = nodes[a].y;
+      const bx = nodes[b].x, by = nodes[b].y;
+      const hasPacket = packets.some(p =>
+        p.alive && ((p.from === a && p.to === b) || (p.from === b && p.to === a))
+      );
+
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+
+      if (hasPacket) {
+        const gradient = ctx.createLinearGradient(ax, ay, bx, by);
+        gradient.addColorStop(0, 'rgba(255,255,255,0.12)');
+        gradient.addColorStop(0.5, 'rgba(255,255,255,0.22)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0.12)');
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([]);
+      } else {
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.lineWidth = 0.75;
+        ctx.setLineDash([4, 8]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawNode(n) {
+      const { x, y, radius, baseColor, role, pulse } = n;
+      const breath = 0.5 + 0.5 * Math.sin(frame * 0.02 + n.pulse);
+
+      // Expanding pulse rings
+      n.pulseRings = n.pulseRings.filter(pr => pr.alpha > 0.01);
+      n.pulseRings.forEach(pr => {
+        ctx.beginPath();
+        ctx.arc(x, y, pr.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `${baseColor}${Math.round(pr.alpha * 255).toString(16).padStart(2,'0')}`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        pr.r += 1.8;
+        pr.alpha *= 0.94;
+      });
+
+      // Glow aura
+      const glowR = radius + 14 + breath * 6;
+      const gr = ctx.createRadialGradient(x, y, radius * 0.3, x, y, glowR);
+      const glowAlpha = (0.12 + breath * 0.12).toFixed(2);
+      gr.addColorStop(0, baseColor + Math.round(parseFloat(glowAlpha) * 255).toString(16).padStart(2,'0'));
+      gr.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.arc(x, y, glowR, 0, Math.PI * 2);
+      ctx.fillStyle = gr;
+      ctx.fill();
+
+      // Node body
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      if (role === 'center') {
+        const bodyGrad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        bodyGrad.addColorStop(0, '#ffffff');
+        bodyGrad.addColorStop(1, '#cccccc');
+        ctx.fillStyle = bodyGrad;
+      } else if (role === 'bridge') {
+        ctx.fillStyle = '#1a1200';
+      } else {
+        ctx.fillStyle = '#111';
+      }
+      ctx.fill();
+
+      // Border
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = baseColor + 'cc';
+      ctx.lineWidth = role === 'center' ? 2.5 : 1.5;
+      ctx.stroke();
+
+      // Inner icon / label for center
+      if (role === 'center') {
+        ctx.fillStyle = '#000';
+        ctx.font = '700 9px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('YOU', x, y);
+      } else if (role === 'bridge') {
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = '700 8px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('⬡', x, y + 1);
+      } else {
+        // Small dot
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = baseColor;
+        ctx.fill();
+      }
+
+      // Name label outside node
+      if (role !== 'center') {
+        const dx = x - CX, dy = y - CY;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        const lx = x + (dx / len) * (radius + 14);
+        const ly = y + (dy / len) * (radius + 14);
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.font = '500 9px Inter, sans-serif';
+        ctx.textAlign = lx < CX ? 'right' : (lx > CX + 5 ? 'left' : 'center');
+        ctx.textBaseline = 'middle';
+        ctx.fillText(n.label, lx, ly);
+      }
+    }
+
+    function drawPacket(p) {
+      if (!p.alive) return;
+      const a = nodes[p.from], b = nodes[p.to];
+      const px = a.x + (b.x - a.x) * p.progress;
+      const py = a.y + (b.y - a.y) * p.progress;
+
+      // Trail
+      const trailT = Math.max(0, p.progress - 0.18);
+      const tx = a.x + (b.x - a.x) * trailT;
+      const ty = a.y + (b.y - a.y) * trailT;
+      const trailGrad = ctx.createLinearGradient(tx, ty, px, py);
+      trailGrad.addColorStop(0, p.color + '00');
+      trailGrad.addColorStop(1, p.color + 'cc');
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(px, py);
+      ctx.strokeStyle = trailGrad;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Dot
+      ctx.beginPath();
+      ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+
+      // Sparkle halo
+      ctx.beginPath();
+      ctx.arc(px, py, 7, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + '44';
+      ctx.fill();
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      frame++;
+
+      // Subtle radial background gradient from center
+      const bgGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, Math.min(W, H) * 0.55);
+      bgGrad.addColorStop(0, 'rgba(255,255,255,0.025)');
+      bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Rotating outer guide circle (very faint)
+      ctx.save();
+      ctx.translate(CX, CY);
+      ctx.rotate(frame * 0.002);
+      ctx.beginPath();
+      ctx.arc(0, 0, Math.min(W, H) * 0.38, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([6, 18]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // Draw edges
+      edgeDefs.forEach(([a, b]) => drawEdge(a, b));
+
+      // Spawn & move packets
+      spawnRandom();
+      maybeEmitPulse();
+      packets = packets.filter(p => p.alive);
+      packets.forEach(p => {
+        p.progress += p.speed;
+        if (p.progress >= 1) { p.alive = false; return; }
+        drawPacket(p);
+      });
+
+      // Draw nodes
+      nodes.forEach(n => drawNode(n));
+
+      requestAnimationFrame(tick);
+    }
+
+    const nodeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !started) {
+          started = true;
+          setup();
+          tick();
+          nodeObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    nodeObs.observe(canvas);
+
+    window.addEventListener('resize', () => { if (started) setup(); });
+  })();
+
+  // ── FORM SUBMIT ───────────────────────────────────────────────
+  document.getElementById('submitBtn').addEventListener('click', function() {
+    const name  = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const area  = document.getElementById('area').value;
+    const why   = document.getElementById('why').value.trim();
+
+    if (!name || !email || !area || !why) {
+      // Inline validation: highlight empty fields
+      ['fullName', 'email', 'area', 'why'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim() || (id === 'area' && !el.value)) {
+          el.style.borderColor = '#ff4444';
+          el.addEventListener('focus', function handler() {
+            el.style.borderColor = '';
+            el.removeEventListener('focus', handler);
+          });
+        }
+      });
+      return;
+    }
+    document.getElementById('formContainer').style.display = 'none';
+    document.getElementById('successMsg').classList.add('show');
+  });
+
+</script>
+</body>
+</html>
